@@ -29,12 +29,10 @@ pipeline {
                 }
             }
         }
-        stage('Run Docker Container') {
+        stage('Run Docker Compose') {
             steps {
                 script {
-                    // Run the new container
-                    def dockerImage = docker.image(DOCKER_IMAGE)
-                    def dockerContainer = dockerImage.run('--name ' + CONTAINER_NAME, '-p ' + PORT_MAPPING)
+                    sh 'docker-compose up -d'
                 }
             }
         }
