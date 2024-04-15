@@ -1,5 +1,7 @@
 pipeline {
-    agent any
+    agent {
+            label 'node && ubuntu'
+    }
     environment {
         DOCKER_IMAGE = 'my-nuxt-app'
         CONTAINER_NAME = 'my-nuxt-container'
