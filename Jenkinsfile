@@ -1,6 +1,6 @@
 pipeline {
     agent {
-            label 'node && ubuntu'
+        label 'node && ubuntu'
     }
     environment {
         DOCKER_IMAGE = 'my-nuxt-app'
@@ -15,9 +15,24 @@ pipeline {
                 }
             }
         }
+        stage('Stop and Remove Existing Container') {
+            steps {
+                script {
+                    // Stop and remove the container if it exists
+                    try {
+                        docker.image(DOCKER_IMAGE).stop(CONTAINER_NAME)
+                        docker.image(DOCKER_IMAGE).remove(CONTAINER_NAME)
+                    } catch (Exception e) {
+                        // Container does not exist or failed to remove
+                        echo "No existing container to stop/remove"
+                    }
+                }
+            }
+        }
         stage('Run Docker Container') {
             steps {
                 script {
+                    // Run the new container
                     def dockerImage = docker.image(DOCKER_IMAGE)
                     def dockerContainer = dockerImage.run('--name ' + CONTAINER_NAME, '-p ' + PORT_MAPPING)
                 }
